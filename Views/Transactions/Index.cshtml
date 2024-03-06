@@ -1,0 +1,68 @@
+@model IEnumerable<BooksOnLoan.Models.Transaction>
+
+@{
+    ViewData["Title"] = "Transactions";
+}
+
+<h1>Transactions</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TransactionId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Book)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LoanDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReturnDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Returned)
+            </th>
+            
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td style="@(item.ReturnDate < DateTime.Now && item.Returned == false ? "color: red;" : "")">
+                @Html.DisplayFor(modelItem => item.TransactionId)
+            </td>
+            <td style="@(item.ReturnDate < DateTime.Now && item.Returned == false ? "color: red;" : "")">
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td style="@(item.ReturnDate < DateTime.Now && item.Returned == false ? "color: red;" : "")">
+                @Html.DisplayFor(modelItem => item.Book.Title)
+            </td>
+            <td style="@(item.ReturnDate < DateTime.Now && item.Returned == false ? "color: red;" : "")">
+                @Html.DisplayFor(modelItem => item.LoanDate)
+            </td>
+            <td style="@(item.ReturnDate < DateTime.Now && item.Returned == false ? "color: red;" : "")">
+                @Html.DisplayFor(modelItem => item.ReturnDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Returned)
+                @if(item.ReturnDate < DateTime.Now && item.Returned == false) {
+                    <a style="color: red;">Overdue</a>
+                }
+            </td>
+            
+            <td>
+                
+                <a asp-action="Details" asp-route-id="@item.TransactionId">Details</a>
+                <a asp-action="Delete" asp-route-id="@item.TransactionId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

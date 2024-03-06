@@ -1,0 +1,94 @@
+@model IEnumerable<BooksOnLoan.Models.Transaction>
+
+@{
+    ViewData["Title"] = "My Books";
+}
+
+<h1>My Books</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Book)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LoanDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReturnDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Returned)
+            </th>
+            
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td style="@(item.ReturnDate < DateTime.Now && item.Returned == false ? "color: red;" : "")">
+                @Html.DisplayFor(modelItem => item.Book.Title)
+            </td>
+            <td style="@(item.ReturnDate < DateTime.Now && item.Returned == false ? "color: red;" : "")">
+                @Html.DisplayFor(modelItem => item.LoanDate)
+            </td >
+            <td style="@(item.ReturnDate < DateTime.Now && item.Returned == false ? "color: red;" : "")">
+                @Html.DisplayFor(modelItem => item.ReturnDate)
+            </td>
+            <td style="@(item.ReturnDate < DateTime.Now && item.Returned == false ? "color: red;" : "")">
+                @Html.DisplayFor(modelItem => item.Returned)
+            </td>
+            @if(item.Returned == false) {
+                <td>
+                <a asp-action="Return" asp-route-id="@item.TransactionId">Return</a>
+                @if(item.ReturnDate < DateTime.Now && item.Returned == false) {
+                    <a style="color: red;">Overdue</a>
+                }
+                </td>
+            }
+            
+        </tr>
+}
+    </tbody>
+</table>
+<div id="overdueBooksModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Warning</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <p>From: The Zenith</p>
+                    <p>To: @User.Identity.Name</p>
+                    <p>Subject: Books Overdue</p>
+                    <p>Message:</p>
+                    <p>The following books are overdue:</p>
+                    <ul>
+                        @foreach (var item in Model){
+                            if(item.ReturnDate < DateTime.Now && item.Returned == false && User.Identity.Name == item.UserName) {
+                                <li>@Html.DisplayFor(modelItem => item.Book.Title)</li>
+                            }
+                            
+                        }
+                    </ul>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    @{
+        var hasOverdueBooks = Model.Any(item => item.ReturnDate < DateTime.Now && item.Returned == false && User.Identity.Name == item.UserName);
+    }
+    <script>
+        $(document).ready(function(){
+            var hasOverdueBooks = '@hasOverdueBooks';
+            if (hasOverdueBooks === 'True') {
+                $("#overdueBooksModal").modal("show");
+            }
+        });
+    </script>

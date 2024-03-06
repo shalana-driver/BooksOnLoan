@@ -1,0 +1,57 @@
+@model BooksOnLoan.Models.Book
+
+
+@{
+    ViewData["Title"] = "Loan";
+}
+
+<h1>Loan</h1>
+<div>
+<h4>Book</h4>
+<hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Author)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Author)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Year)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Year)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Quantity)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Quantity)
+        </dd>
+    </dl>
+</div>
+
+<div >
+    
+    <form asp-action="Loan">
+        <input type="hidden" asp-for="BookId" />
+        <input type="submit" value="Loan"/> 
+        
+    </form>
+    
+</div>
+
+
+<div>
+    <a asp-action="IndexMember">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
