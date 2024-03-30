@@ -4,7 +4,7 @@
     ViewData["Title"] = "Books";
 }
 
-<h1>Books</h1>
+@* <h1>Books</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -56,4 +56,5 @@
         </tr>
 }
     </tbody>
-</table>
+</table> *@
+<component type="typeof(Books)" render-mode="ServerPrerendered"/>

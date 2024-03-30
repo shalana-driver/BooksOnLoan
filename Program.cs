@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using BooksOnLoan.Data;
+using BooksOnLoan.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,13 @@ options => {
 
 builder.Services.AddControllersWithViews();
 
+builder.Services
+.AddRazorComponents()
+.AddInteractiveServerComponents()
+.AddCircuitOptions(options => options.DetailedErrors = true);
+
+builder.Services.AddQuickGridEntityFrameworkAdapter();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -47,6 +55,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseAntiforgery();
 
 app.UseAuthorization();
 
@@ -66,5 +75,8 @@ using (var scope = app.Services.CreateScope()) {
 
     IdentitySeedData.Initialize(context, userMgr, roleMgr).Wait();
 }
+
+app.MapRazorComponents<App>()
+.AddInteractiveServerRenderMode();
 
 app.Run();
