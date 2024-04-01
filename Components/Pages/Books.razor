@@ -1,4 +1,4 @@
-@page "/test"
+@* @page "/test" *@
 @* @inject HttpClient Http *@
 @inject LibraryDbContext libraryDbContext
 @rendermode InteractiveServer
@@ -20,9 +20,24 @@ else {
         <PropertyColumn Property="@(_ => _.Title)" Sortable="true" />
         <PropertyColumn Property="@(_ => _.Year)" Sortable="true" />
         <PropertyColumn Property="@(_ => _.Quantity)" Sortable="true" />
+        <TemplateColumn >
+            <a href="/Books/Details/@(context.BookId)">
+                <button type="button" class="btn btn-success btn-sm">Details</button>
+            </a>
+        </TemplateColumn>
+        <TemplateColumn>
+            <a href="/Books/Edit/@(context.BookId)">
+                <button type="button" class="btn btn-warning btn-sm">Edit</button>
+            </a>
+        </TemplateColumn>
+        <TemplateColumn>
+            <a href="/Books/Delete/@(context.BookId)">
+                <button type="button" class="btn btn-danger btn-sm">Delete</button>
+            </a>
+        </TemplateColumn>
         <ColumnOptions>
             <div class="search-box">
-                <input type="search" autofocus @bind="bookFilter" @bind:event="oninput" placeholder="Search Books..." />
+                <input class="form-control me-sm-2 " style="width: 30%" type="search" autofocus @bind="bookFilter" @bind:event="oninput" placeholder="Search Books..." />
             </div>
         </ColumnOptions>
     </QuickGrid> 
@@ -31,15 +46,26 @@ else {
 
 @code {
     
-    private PaginationState pagination = new PaginationState { ItemsPerPage = 12 };
+    private PaginationState pagination = new PaginationState { ItemsPerPage = 5 };
     
     string bookFilter;
 
-    private Microsoft.EntityFrameworkCore.DbSet<Book>? books;
-        protected override async Task OnInitializedAsync() {
-        books = libraryDbContext.Books;
-
+    private List<Book> bookList
+    {
+        get
+        {
+            var books = libraryDbContext.Books.ToList();
+            if (!books.Any())
+            {
+                return null;
+            }
+            else
+            {
+            
+                return books;
+            }
         }
+    }
 
     private IQueryable<Book> FilteredBooks
     {
@@ -47,35 +73,12 @@ else {
         {
             if (string.IsNullOrEmpty(bookFilter))
             {
-                return books;
+                return bookList.AsQueryable();
             }
             else
             {
-                return books.Where(b => b.Title.Contains(bookFilter, StringComparison.CurrentCultureIgnoreCase));
+                return bookList.AsQueryable().Where(b => b.Title.Contains(bookFilter, StringComparison.CurrentCultureIgnoreCase));
             }
         }
     }
-
-    @* IQueryable<Book> FilteredBooks {
-        get {
-            var result = books;
-            if (!string.IsNullOrEmpty(bookFilter))
-            {
-                result = result.Where(b => b.Title.Contains(bookFilter, StringComparison.CurrentCultureIgnoreCase));
-            }
-            return result;
-        }
-    } *@
-
-    
-
-    @* protected override async Task OnInitializedAsync()
-    {
-        //private readonly LibraryDbContext _context;
-        //var libraryDbContext = _context.Transactions;
-        //string URL = "DataSource=library.db";
-        //IQueryable<Transaction> transactions = await libraryDbContext.ToListAsync();
-        //transactions = (await Http.GetFromJsonAsync<Transaction[]>(URL)).AsQueryable();
-        //books = libraryDbContext.Books.AsQueryable();
-    }  *@
 }

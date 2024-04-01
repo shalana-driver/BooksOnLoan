@@ -1,0 +1,41 @@
+@* @page "/hours" *@
+@rendermode InteractiveServer
+
+@if (dayHours == null)
+{
+    <div style="padding: 30px">
+        <p><b>Hours of Operation</b></p>
+        <p><em>Loading...</em></p>
+    </div> 
+} 
+else {
+    
+    <div style="padding: 30px">
+        <p><b>Hours of Operation</b></p>
+        <QuickGrid Items="@dayHours" >
+            <PropertyColumn Property="@(_ => _.Day)" Sortable="false" />
+            <PropertyColumn Property="@(_ => _.Hours)" Sortable="false" />
+        </QuickGrid>
+    </div>
+    
+}
+
+@code {
+    public class DayHours
+    {
+        public string? Day { get; set; }
+        public string? Hours { get; set; }
+    }
+
+    IQueryable<DayHours> dayHours = new List<DayHours>
+    {
+        new DayHours { Day = "Monday", Hours = "9:00 am - 7:00 pm" },
+        new DayHours { Day = "Tuesday", Hours = "9:00 am - 7:00 pm" },
+        new DayHours { Day = "Wednesday", Hours = "9:00 am - 7:00 pm" },
+        new DayHours { Day = "Thursday", Hours = "9:00 am - 7:00 pm" },
+        new DayHours { Day = "Friday", Hours = "9:00 am - 6:00 pm" },
+        new DayHours { Day = "Saturday", Hours = "9:00 am - 5:00 pm" },
+        new DayHours { Day = "Sunday", Hours = "Closed" },
+    }.AsQueryable();
+
+}

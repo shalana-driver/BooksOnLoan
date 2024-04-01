@@ -16,12 +16,19 @@ namespace BooksOnLoan.Models
         public int? BookId { get; set; }
         [Display(Name = "User Name")]
         public string? UserName { get; set; }
+
         [Display(Name = "Loan Date")]
         [DisplayFormat(DataFormatString = "{0:MMM dd, yyyy}", ApplyFormatInEditMode = true)]
         public DateTime?  LoanDate { get; set; }
+
         [Display(Name = "Return Date")]
         [DisplayFormat(DataFormatString = "{0:MMM dd, yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? ReturnDate { get; set; }
+
+        [Display(Name = "Due Date")]
+        [DisplayFormat(DataFormatString = "{0:MMM dd, yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime? DueDate { get; set; }
+
         public bool? Returned { get; set; }
 
         [ForeignKey("BookId")]

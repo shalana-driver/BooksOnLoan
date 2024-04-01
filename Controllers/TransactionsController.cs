@@ -73,7 +73,7 @@ namespace BooksOnLoan.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TransactionId,BookId,UserName,LoanDate,ReturnDate")] Transaction transaction)
+        public async Task<IActionResult> Create([Bind("TransactionId,BookId,UserName,LoanDate,DueDate")] Transaction transaction)
         {
             if (ModelState.IsValid)
             {
@@ -107,7 +107,7 @@ namespace BooksOnLoan.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("TransactionId,BookId,UserName,LoanDate,ReturnDate")] Transaction transaction)
+        public async Task<IActionResult> Edit(int id, [Bind("TransactionId,BookId,UserName,LoanDate,ReturnDate,DueDate")] Transaction transaction)
         {
             if (id != transaction.TransactionId)
             {
@@ -210,6 +210,9 @@ namespace BooksOnLoan.Controllers
                     await _context.SaveChangesAsync();
 
                     transaction.Returned = true;
+                    await _context.SaveChangesAsync();
+
+                    transaction.ReturnDate = DateTime.Now;
                     await _context.SaveChangesAsync();
 
                     return RedirectToAction(nameof(IndexMember));

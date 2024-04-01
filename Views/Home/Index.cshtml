@@ -3,7 +3,21 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Shalana Driver</p>
-    <p>A01260366</p>
+    <h1 class="display-4"><img src="/images/icons8-books-96.png"/>The Zenith</h1>
+    @* credit for icon: "https://icons8.com/icon/72nVaLzg9k5q/books" *@
+    @if(!User.IsInRole("Admin") && !User.IsInRole("Member") && User.Identity.IsAuthenticated)
+    {
+        <p>You will be able to access the library once an Admin has approved you.</p>
+    }
 </div>
+<div style="display: flex; justify-content: space-between;">
+    <div style="flex: 1;">
+        <component type="typeof(Hours)" render-mode="ServerPrerendered"/>
+        <component type="typeof(ContactUs)" render-mode="ServerPrerendered"/>
+    </div>
+    <div style="flex: 1;">
+        <component type="typeof(Featured)" render-mode="ServerPrerendered"/>
+    </div>
+
+</div>
+

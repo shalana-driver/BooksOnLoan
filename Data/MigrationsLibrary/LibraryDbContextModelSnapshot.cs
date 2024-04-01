@@ -3,19 +3,16 @@ using System;
 using BooksOnLoan.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace BooksOnLoan.Data.Migrations
+namespace BooksOnLoan.Data.MigrationsLibrary
 {
     [DbContext(typeof(LibraryDbContext))]
-    [Migration("20240303221801_M2")]
-    partial class M2
+    partial class LibraryDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.2");
@@ -98,6 +95,9 @@ namespace BooksOnLoan.Data.Migrations
                     b.Property<int?>("BookId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime?>("DueDate")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime?>("LoanDate")
                         .HasColumnType("TEXT");
 
@@ -121,18 +121,48 @@ namespace BooksOnLoan.Data.Migrations
                         {
                             TransactionId = 1,
                             BookId = 2,
+                            DueDate = new DateTime(2024, 2, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LoanDate = new DateTime(2024, 1, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ReturnDate = new DateTime(2024, 2, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Returned = false,
+                            ReturnDate = new DateTime(2024, 1, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Returned = true,
                             UserName = "mm@mm.mm"
                         },
                         new
                         {
                             TransactionId = 2,
-                            BookId = 4,
-                            LoanDate = new DateTime(2024, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ReturnDate = new DateTime(2024, 3, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            BookId = 1,
+                            DueDate = new DateTime(2024, 2, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LoanDate = new DateTime(2024, 1, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Returned = false,
+                            UserName = "mm@mm.mm"
+                        },
+                        new
+                        {
+                            TransactionId = 3,
+                            BookId = 4,
+                            DueDate = new DateTime(2024, 3, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LoanDate = new DateTime(2024, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ReturnDate = new DateTime(2024, 3, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Returned = true,
+                            UserName = "mm@mm.mm"
+                        },
+                        new
+                        {
+                            TransactionId = 4,
+                            BookId = 5,
+                            DueDate = new DateTime(2024, 4, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LoanDate = new DateTime(2024, 3, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Returned = false,
+                            UserName = "mm@mm.mm"
+                        },
+                        new
+                        {
+                            TransactionId = 5,
+                            BookId = 3,
+                            DueDate = new DateTime(2024, 4, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LoanDate = new DateTime(2024, 3, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ReturnDate = new DateTime(2024, 3, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Returned = true,
                             UserName = "mm@mm.mm"
                         });
                 });

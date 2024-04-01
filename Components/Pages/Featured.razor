@@ -1,0 +1,52 @@
+@inject LibraryDbContext libraryDbContext
+@rendermode InteractiveServer
+
+
+@if (RandomBook == null)
+{
+    <h3 class="card-header" style="padding: 20px">Book Highlight</h3>
+    <p><em>Loading...</em></p>
+}
+else {
+    <div>
+        <h3 class="card-header" style="padding: 20px">Book Highlight</h3>
+        <div class="card border-primary mb-3" >
+            <div class="card-header">@RandomBook.Author</div>
+            <div class="card-body">
+                <h4 class="card-title">@RandomBook.Title</h4>
+                <p class="card-text">@RandomBook.Year</p>
+            </div>
+            <a href="/books/index" style="padding: 10px">
+                <button type="button" class="btn btn-secondary btn-small" >Discover More...</button>
+            </a>
+            <a href="/" style="padding: 10px">
+                <span class="badge rounded-pill bg-primary">Shuffle to see a new higlight</span>
+            </a>
+        </div>
+    </div>
+    
+}
+
+
+    
+@code {
+
+    private Book RandomBook
+    {
+        get
+        {
+            var books = libraryDbContext.Books.ToList();
+            if (!books.Any())
+            {
+                return null;
+            }
+            else
+            {
+                Random random = new Random();
+                int index = random.Next(books.Count);
+                return books[index];
+            }
+        }
+    }
+
+}

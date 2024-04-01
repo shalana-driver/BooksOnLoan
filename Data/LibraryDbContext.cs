@@ -28,7 +28,8 @@ namespace BooksOnLoan.Data
             builder.Entity<Book>().ToTable("Book");
             builder.Entity<Transaction>().ToTable("Transaction");
 
-            builder.Seed();
+            SeedData.Seed(builder);
+            //builder.Seed();
         }
     }
 }

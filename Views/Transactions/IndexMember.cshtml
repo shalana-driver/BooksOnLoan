@@ -16,6 +16,9 @@
                 @Html.DisplayNameFor(model => model.LoanDate)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.DueDate)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.ReturnDate)
             </th>
             <th>
@@ -28,22 +31,32 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td style="@(item.ReturnDate < DateTime.Now && item.Returned == false ? "color: red;" : "")">
+            <td style="@(item.DueDate < DateTime.Now && item.Returned == false ? "color: red;" : "")">
                 @Html.DisplayFor(modelItem => item.Book.Title)
             </td>
-            <td style="@(item.ReturnDate < DateTime.Now && item.Returned == false ? "color: red;" : "")">
+            <td style="@(item.DueDate < DateTime.Now && item.Returned == false ? "color: red;" : "")">
                 @Html.DisplayFor(modelItem => item.LoanDate)
             </td >
-            <td style="@(item.ReturnDate < DateTime.Now && item.Returned == false ? "color: red;" : "")">
-                @Html.DisplayFor(modelItem => item.ReturnDate)
+            <td style="@(item.DueDate < DateTime.Now && item.Returned == false ? "color: red;" : "")">
+                @Html.DisplayFor(modelItem => item.DueDate)
             </td>
-            <td style="@(item.ReturnDate < DateTime.Now && item.Returned == false ? "color: red;" : "")">
+            @if(!item.ReturnDate.HasValue) {
+                <td style="@(item.DueDate < DateTime.Now && item.Returned == false ? "color: red;" : "")">
+                    Outstanding
+                </td>
+            } else {
+                <td style="@(item.DueDate < DateTime.Now && item.Returned == false ? "color: red;" : "")">
+                @Html.DisplayFor(modelItem => item.ReturnDate)
+                </td>
+            }
+            
+            <td style="@(item.DueDate < DateTime.Now && item.Returned == false ? "color: red;" : "")">
                 @Html.DisplayFor(modelItem => item.Returned)
             </td>
             @if(item.Returned == false) {
                 <td>
                 <a asp-action="Return" asp-route-id="@item.TransactionId">Return</a>
-                @if(item.ReturnDate < DateTime.Now && item.Returned == false) {
+                @if(item.DueDate < DateTime.Now && item.Returned == false) {
                     <a style="color: red;">Overdue</a>
                 }
                 </td>
@@ -68,7 +81,7 @@
                     <p>The following books are overdue:</p>
                     <ul>
                         @foreach (var item in Model){
-                            if(item.ReturnDate < DateTime.Now && item.Returned == false && User.Identity.Name == item.UserName) {
+                            if(item.DueDate < DateTime.Now && item.Returned == false && User.Identity.Name == item.UserName) {
                                 <li>@Html.DisplayFor(modelItem => item.Book.Title)</li>
                             }
                             
@@ -82,7 +95,7 @@
      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     @{
-        var hasOverdueBooks = Model.Any(item => item.ReturnDate < DateTime.Now && item.Returned == false && User.Identity.Name == item.UserName);
+        var hasOverdueBooks = Model.Any(item => item.DueDate < DateTime.Now && item.Returned == false && User.Identity.Name == item.UserName);
     }
     <script>
         $(document).ready(function(){

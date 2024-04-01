@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace BooksOnLoan.Data.Migrations
+namespace BooksOnLoan.Data.MigrationsLibrary
 {
     /// <inheritdoc />
-    public partial class M1 : Migration
+    public partial class M2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -38,7 +38,9 @@ namespace BooksOnLoan.Data.Migrations
                     BookId = table.Column<int>(type: "INTEGER", nullable: true),
                     UserName = table.Column<string>(type: "TEXT", nullable: true),
                     LoanDate = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    ReturnDate = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    ReturnDate = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    DueDate = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    Returned = table.Column<bool>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -64,11 +66,14 @@ namespace BooksOnLoan.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "Transaction",
-                columns: new[] { "TransactionId", "BookId", "LoanDate", "ReturnDate", "UserName" },
+                columns: new[] { "TransactionId", "BookId", "DueDate", "LoanDate", "ReturnDate", "Returned", "UserName" },
                 values: new object[,]
                 {
-                    { 1, 2, new DateTime(2024, 1, 19, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2024, 2, 19, 0, 0, 0, 0, DateTimeKind.Unspecified), "mm@mm.mm" },
-                    { 2, 4, new DateTime(2024, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2024, 3, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), "mm@mm.mm" }
+                    { 1, 2, new DateTime(2024, 2, 19, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2024, 1, 19, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2024, 1, 31, 0, 0, 0, 0, DateTimeKind.Unspecified), true, "mm@mm.mm" },
+                    { 2, 1, new DateTime(2024, 2, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2024, 1, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, "mm@mm.mm" },
+                    { 3, 4, new DateTime(2024, 3, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2024, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2024, 3, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), true, "mm@mm.mm" },
+                    { 4, 5, new DateTime(2024, 4, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2024, 3, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, "mm@mm.mm" },
+                    { 5, 3, new DateTime(2024, 4, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2024, 3, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2024, 3, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), true, "mm@mm.mm" }
                 });
 
             migrationBuilder.CreateIndex(

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using BooksOnLoan.Data;
 using BooksOnLoan.Components;
+using BooksOnLoan.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("IdentityConnection") ?? throw new InvalidOperationException("Connection string 'IdentityConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+// builder.Services.AddDefaultIdentity<ExtendedUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
+// builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 var connectionLibraryString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<LibraryDbContext>(options =>
@@ -18,7 +21,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 // builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
 //     .AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(
+builder.Services.AddIdentity<ExtendedUser, IdentityRole>(
 options => {
     options.Stores.MaxLengthForKeys = 128;
 })
@@ -70,7 +73,7 @@ using (var scope = app.Services.CreateScope()) {
     var context = services.GetRequiredService<ApplicationDbContext>();    
     context.Database.Migrate();
 
-    var userMgr = services.GetRequiredService<UserManager<IdentityUser>>();  
+    var userMgr = services.GetRequiredService<UserManager<ExtendedUser>>();  
     var roleMgr = services.GetRequiredService<RoleManager<IdentityRole>>();  
 
     IdentitySeedData.Initialize(context, userMgr, roleMgr).Wait();

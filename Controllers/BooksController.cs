@@ -217,7 +217,7 @@ namespace BooksOnLoan.Controllers
                         BookId = book.BookId,
                         UserName = User.Identity.Name,
                         LoanDate = DateTime.Now,
-                        ReturnDate = DateTime.Now.AddMonths(1),
+                        DueDate = DateTime.Now.AddMonths(1),
                         Returned = false
                     };
 

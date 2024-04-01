@@ -1,7 +1,8 @@
-@page "/test"
+@* @page "/test" *@
 @* @inject HttpClient Http *@
 @inject LibraryDbContext libraryDbContext
 @rendermode InteractiveServer
+@using Microsoft.EntityFrameworkCore
 
 <PageTitle>Transactions</PageTitle>
 <h1>Transactions</h1>
@@ -15,13 +16,13 @@
 else {
     <QuickGrid Items="@FilteredTransactions" Pagination="@pagination" style="width: 100%">
         <PropertyColumn Property="@(_ => _.TransactionId)" Sortable="true" Title="ID"/>
-        <PropertyColumn Property="@(_ => _.UserName)" Sortable="true" />
+        <PropertyColumn Property="@(_ => _.UserName)" Sortable="true" Title="User Name"/>
         <PropertyColumn Property="@(_ => _.Book.Title)" Sortable="true" />
-        <PropertyColumn Property="@(_ => _.LoanDate)" Sortable="true" />
-        <PropertyColumn Property="@(_ => _.ReturnDate)" Sortable="true" />
+        <PropertyColumn Property="@(_ => _.LoanDate)" Sortable="true" Title="Loan Date"/>
+        <PropertyColumn Property="@(_ => _.DueDate)" Sortable="true" Title="Due Date"/>
         <ColumnOptions>
             <div class="search-box">
-                <input type="search" autofocus @bind="transactionFilter" @bind:event="oninput" placeholder="Search Transactions..." />
+                <input class="form-control me-sm-2" style="width: 30%" type="search" autofocus @bind="transactionFilter" @bind:event="oninput" placeholder="Search Transactions..." />
             </div>
         </ColumnOptions>
     </QuickGrid> 
@@ -34,44 +35,36 @@ else {
     
     string transactionFilter;
 
-    private IQueryable<Transaction> FilteredTransactions
-{
-    get
+    private List<Transaction> transactionList
     {
-        if (string.IsNullOrEmpty(transactionFilter))
+        get
         {
-            return transactions;
-        }
-        else
-        {
-            return transactions.Where(t => t.Book.Title.Contains(transactionFilter, StringComparison.CurrentCultureIgnoreCase));
+            var transactions = libraryDbContext.Transactions.Include(t => t.Book).ToList();
+            if (!transactions.Any())
+            {
+                return null;
+            }
+            else
+            {
+            
+                return transactions;
+            }
         }
     }
-}
 
-    @* IQueryable<Book> FilteredBooks {
-        get {
-            var result = books;
-            if (!string.IsNullOrEmpty(bookFilter))
-            {
-                result = result.Where(b => b.Title.Contains(bookFilter, StringComparison.CurrentCultureIgnoreCase));
-            }
-            return result;
-        }
-    } *@
-
-    private Microsoft.EntityFrameworkCore.DbSet<Transaction>? transactions;
-        protected override async Task OnInitializedAsync() {
-        transactions = libraryDbContext.Transactions;
-        }
-
-    @* protected override async Task OnInitializedAsync()
+    private IQueryable<Transaction> FilteredTransactions
     {
-        //private readonly LibraryDbContext _context;
-        //var libraryDbContext = _context.Transactions;
-        //string URL = "DataSource=library.db";
-        //IQueryable<Transaction> transactions = await libraryDbContext.ToListAsync();
-        //transactions = (await Http.GetFromJsonAsync<Transaction[]>(URL)).AsQueryable();
-        //books = libraryDbContext.Books.AsQueryable();
-    }  *@
+        get
+        {
+            if (string.IsNullOrEmpty(transactionFilter))
+            {
+                return transactionList.AsQueryable();
+            }
+            else
+            {
+                return transactionList.AsQueryable().Include(t => t.Book).Where(t => t.Book.Title.Contains(transactionFilter, StringComparison.CurrentCultureIgnoreCase));
+            }
+        }
+    }
+    
 }
