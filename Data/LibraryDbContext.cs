@@ -10,7 +10,9 @@ namespace BooksOnLoan.Data
     public class LibraryDbContext : DbContext
     {
         public LibraryDbContext(DbContextOptions<LibraryDbContext> options)
-        : base(options) {}
+        : base(options) {
+            Database.EnsureCreated();
+        }
 
 
         public DbSet<Book>? Books { get; set; }
