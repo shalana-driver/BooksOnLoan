@@ -1,0 +1,79 @@
+@* @page "/test" *@
+@* @inject HttpClient Http *@
+@inject LibraryDbContext libraryDbContext
+@rendermode InteractiveServer
+
+
+<PageTitle>Books</PageTitle>
+<h1>Library</h1>
+
+
+@if (FilteredBooks == null)
+{
+    <p><em>Loading...</em></p>
+}
+
+else {
+    <QuickGrid Items="@FilteredBooks" Pagination="@pagination" style="width: 100%">
+        <PropertyColumn Property="@(_ => _.BookId)" Sortable="true" Title="ID"/>
+        <PropertyColumn Property="@(_ => _.Author)" Sortable="true" />
+        <PropertyColumn Property="@(_ => _.Title)" Sortable="true" />
+        <PropertyColumn Property="@(_ => _.Year)" Sortable="true" />
+        <PropertyColumn Property="@(_ => _.Quantity)" Sortable="true" />
+        <TemplateColumn >
+            <a href="/Books/DetailsMember/@(context.BookId)">
+                <button type="button" class="btn btn-success btn-sm">Details</button>
+            </a>
+        </TemplateColumn>
+        <TemplateColumn >
+            <a href="/Books/Loan/@(context.BookId)">
+                <button type="button" class="btn btn-info btn-sm">Loan</button>
+            </a>
+        </TemplateColumn>
+        <ColumnOptions>
+            <div class="search-box">
+                <input class="form-control me-sm-2 " style="width: 30%" type="search" autofocus @bind="bookFilter" @bind:event="oninput" placeholder="Search Books..." />
+            </div>
+        </ColumnOptions>
+    </QuickGrid> 
+    <Paginator State="@pagination" />
+}
+
+@code {
+    
+    private PaginationState pagination = new PaginationState { ItemsPerPage = 5 };
+    
+    string bookFilter;
+
+    private List<Book> bookList
+    {
+        get
+        {
+            var books = libraryDbContext.Books.ToList();
+            if (!books.Any())
+            {
+                return null;
+            }
+            else
+            {
+            
+                return books;
+            }
+        }
+    }
+
+    private IQueryable<Book> FilteredBooks
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(bookFilter))
+            {
+                return bookList.AsQueryable();
+            }
+            else
+            {
+                return bookList.AsQueryable().Where(b => b.Title.Contains(bookFilter, StringComparison.CurrentCultureIgnoreCase));
+            }
+        }
+    }
+}

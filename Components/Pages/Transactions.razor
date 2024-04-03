@@ -18,8 +18,34 @@ else {
         <PropertyColumn Property="@(_ => _.TransactionId)" Sortable="true" Title="ID"/>
         <PropertyColumn Property="@(_ => _.UserName)" Sortable="true" Title="User Name"/>
         <PropertyColumn Property="@(_ => _.Book.Title)" Sortable="true" />
-        <PropertyColumn Property="@(_ => _.LoanDate)" Sortable="true" Title="Loan Date"/>
-        <PropertyColumn Property="@(_ => _.DueDate)" Sortable="true" Title="Due Date"/>
+        <TemplateColumn Title="Loan Date" Sortable="true">
+            <span>@context.LoanDate.Value.ToString("MMM dd, yyyy")</span>
+        </TemplateColumn>
+        <TemplateColumn Title="Due Date" Sortable="true">
+            <span>@context.DueDate.Value.ToString("MMM dd, yyyy")</span>          
+        </TemplateColumn>
+        <TemplateColumn Title="Return Date" Sortable="true">
+
+            @if (context.ReturnDate == null)
+            {
+                <span>Outstanding</span>
+            }
+            else
+            {
+                <span>@context.ReturnDate.Value.ToString("MMM dd, yyyy")</span>
+            }
+        </TemplateColumn>
+        <PropertyColumn Property="@(_ => _.Returned)" Sortable="true" Title="Returned"/>
+        <TemplateColumn >
+            <a href="/Transactions/Details/@(context.TransactionId)">
+                <button type="button" class="btn btn-success btn-sm">Details</button>
+            </a>
+        </TemplateColumn>
+        <TemplateColumn>
+            <a href="/Transactions/Delete/@(context.TransactionId)">
+                <button type="button" class="btn btn-danger btn-sm">Delete</button>
+            </a>
+        </TemplateColumn>
         <ColumnOptions>
             <div class="search-box">
                 <input class="form-control me-sm-2" style="width: 30%" type="search" autofocus @bind="transactionFilter" @bind:event="oninput" placeholder="Search Transactions..." />
@@ -31,7 +57,7 @@ else {
 
 @code {
 
-    private PaginationState pagination = new PaginationState { ItemsPerPage = 12 };
+    private PaginationState pagination = new PaginationState { ItemsPerPage = 5 };
     
     string transactionFilter;
 

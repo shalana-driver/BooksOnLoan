@@ -30,9 +30,14 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
+    @if(User.Identity.Name == item.UserName) {
         <tr>
             <td style="@(item.DueDate < DateTime.Now && item.Returned == false ? "color: red;" : "")">
                 @Html.DisplayFor(modelItem => item.Book.Title)
+                @if(item.DueDate < DateTime.Now && item.Returned == false) {
+                    <br/>
+                    <span class="badge bg-danger">Overdue</span>
+                }
             </td>
             <td style="@(item.DueDate < DateTime.Now && item.Returned == false ? "color: red;" : "")">
                 @Html.DisplayFor(modelItem => item.LoanDate)
@@ -55,14 +60,13 @@
             </td>
             @if(item.Returned == false) {
                 <td>
-                <a asp-action="Return" asp-route-id="@item.TransactionId">Return</a>
-                @if(item.DueDate < DateTime.Now && item.Returned == false) {
-                    <a style="color: red;">Overdue</a>
-                }
+                <a asp-action="Return" asp-route-id="@item.TransactionId"><button type="button" class="btn btn-info btn-sm">Return</button></a>
                 </td>
             }
             
         </tr>
+    }
+        
 }
     </tbody>
 </table>
